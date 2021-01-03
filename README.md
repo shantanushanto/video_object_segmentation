@@ -1,3 +1,10 @@
+### Code updated by shanto
+- Model is updated to accomodate validation dimension. Not sure if that will produce desired result. But now models are working with validation data. 
+- New router.py file is added for different path. It's better not to use static path.
+- Put train, valid unzipped data into a new folder named raw_data under project directory.
+- Check configuration.py for some tuning variable.
+
+
 ### Video Object Segmentation - YouTube VOS dataset (Xu et al.,arXiv preprint arXiv:1809.03327)
 This is the implementation of the paper "Youtube-VOS: Sequence-to-sequence video object segmentation" by Xu et al, ECCV 2018.  
 

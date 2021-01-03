@@ -1,3 +1,7 @@
+import os
+import router
+
+'''
 json_path = '/home/shashank/shashank/datasets/YoutubeVos/train-004/train/meta.json'
 JPEGtrain_5fps = '/home/shashank/shashank/datasets/YoutubeVos/train-004/train/JPEGImages/'
 Anntrain_5fps = '/home/shashank/shashank/datasets/YoutubeVos/train-004/train/Annotations/'
@@ -10,4 +14,26 @@ validation_json = '/home/shashank/shashank/datasets/YoutubeVos/YouTubeVOS_2018-2
 
 indivAnnotation = '/home/shashank/shashank/AdvCV/YoutubeVOS_submission/'
 indivAnnotation_check = '/home/shashank/shashank/AdvCV/YoutubeVOS_merged_thrsh04/'
+thresh = 0.4
+'''
+
+# block added by shanto
+cuda_enable = False   # CPU: False, GPU: True
+shanto_debug = True   # enabling custom changes by shanto
+valid_subset = 2  # instead of trying all validation folder, try only 5. To try all folder put -1
+epoch = 1
+
+
+json_path = os.path.join(router.tsub, 'meta.json')
+JPEGtrain_5fps = os.path.join(router.tsub, 'JPEGImages/')
+Anntrain_5fps = os.path.join(router.tsub, 'Annotations/')
+
+modelPth = os.path.join(router.model_root, 'youtubeVOSModel_trial_3_1.pth')
+
+JPEGValidation = os.path.join(router.valid, 'JPEGImages/')
+AnnValidation = os.path.join(router.valid, 'Annotations/')
+validation_json = os.path.join(router.valid, 'meta.json')
+
+indivAnnotation = router.YoutubeVOS_submission
+indivAnnotation_check = router.YoutubeVOS_merged_thrsh04
 thresh = 0.4

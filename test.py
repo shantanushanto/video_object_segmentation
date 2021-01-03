@@ -27,6 +27,8 @@ from utils.initializer import Initializer, Encoder, Decoder
 from utils.convlstm import *
 from utils.ensemble import *
 
+import router
+
 json_file = open(cfg.validation_json)
 json_str = json_file.read()
 json_data = json.loads(json_str)
@@ -58,14 +60,20 @@ model = MyEnsemble(initializer,encoder,convlstm,decoder)
 
 model.load_state_dict(torch.load(cfg.modelPth))
 
-model.cuda()
+if cfg.cuda_enable:
+	model.cuda()
 
 
-saveDir = '/home/shashank/shashank/AdvCV/YoutubeVOS_submission/'
+# saveDir = '/home/shashank/shashank/AdvCV/YoutubeVOS_submission/'
+# added by shanto. using input_root dir for saving YoutubeVOS_submission/ directory content
+saveDir = os.path.join(router.YoutubeVOS_submission)
+
 
 def test():
 	model.eval()
-	for i in range(len(validFolders)):
+	no_validFolders = len(validFolders) if cfg.valid_subset == -1 else cfg.valid_subset  # added by shanto
+	for i in range(no_validFolders):
+	# for i in range(len(validFolders)):
 		selectFolder = validFolders[i]
 		segPixel = (list(json_data['videos'][selectFolder]['objects'].keys()))
 		segpth = cfg.AnnValidation + selectFolder + '/'
@@ -79,10 +87,16 @@ def test():
 			indices = np.where(initialseg == int(selectSegPixel))
 			intialmask[indices[0],indices[1]] = 255
 			intialmask = transforms_seg(Image.fromarray(np.uint8(intialmask)))
-			intialmask = intialmask.unsqueeze(0).cuda()
+			if cfg.cuda_enable:
+				intialmask = intialmask.unsqueeze(0).cuda()
+			else:
+				intialmask = intialmask.unsqueeze(0)
 
 			initRGB = transform_rgb(Image.open(rgbpth + frames[0] + '.jpg'))
-			initRGB = initRGB.unsqueeze(0).cuda()
+			if cfg.cuda_enable:
+				initRGB = initRGB.unsqueeze(0).cuda()
+			else:
+				initRGB = initRGB.unsqueeze(0)
 
 			directory = saveDir + selectFolder + '/' + segPixel[j] + '/' 
 			print(directory)
@@ -94,7 +108,10 @@ def test():
 
 			for k in range(len(frames)):
 				rgbImg = transform_rgb(Image.open(rgbpth + frames[k] + '.jpg'))
-				rgbImg = rgbImg.unsqueeze(0).type(torch.FloatTensor).cuda()
+				if cfg.cuda_enable:
+					rgbImg = rgbImg.unsqueeze(0).type(torch.FloatTensor).cuda()
+				else:
+					rgbImg = rgbImg.unsqueeze(0).type(torch.FloatTensor)
 
 				output = model(initRGB, intialmask, rgbImg)
 				output = nn.functional.interpolate(output, size=(720,1280), mode='bilinear', align_corners=False)

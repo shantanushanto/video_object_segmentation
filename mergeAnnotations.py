@@ -27,14 +27,19 @@ from utils.initializer import Initializer, Encoder, Decoder
 from utils.convlstm import *
 from utils.ensemble import *
 
+import router
+
 json_file = open(cfg.validation_json)
 json_str = json_file.read()
 json_data = json.loads(json_str)
 videoFolders = os.listdir(cfg.indivAnnotation)
-saveDir = '/home/shashank/shashank/AdvCV/YoutubeVOS_merged_thrsh04/Annotations/'
-readpth = '/home/shashank/shashank/AdvCV/YoutubeVOS_submission/'
+# saveDir = '/home/shashank/shashank/AdvCV/YoutubeVOS_merged_thrsh04/Annotations/'
+# readpth = '/home/shashank/shashank/AdvCV/YoutubeVOS_submission/'
+saveDir = os.path.join(router.data_root, 'YoutubeVOS_merged_thrsh04/Annotations/')
+readpth = router.YoutubeVOS_submission
 
-test_image = Image.open('/home/shashank/shashank/datasets/YoutubeVos/train-004/train/Annotations/a36bdc4cab/00000.png')
+# test_image = Image.open('/home/shashank/shashank/datasets/YoutubeVos/train-004/train/Annotations/a36bdc4cab/00000.png')
+test_image = Image.open(os.path.join(router.tsub, 'Annotations/0a2f2bd294/00000.png'))
 
 
 
